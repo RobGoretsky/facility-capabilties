@@ -3,10 +3,81 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
+    <title>Facility Capabilities</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="styles.css">
   </head>
+  <script>
+    var facilities = [
+      {'name': 'Birchwood Rehab', 'address': '205 Birchwood Ave, Cranford, NJ 07016', 'capabilities': ['Dental Consult and follow-ups.', '', '', '', 'Infectious Disease Consult and follow-ups.', 'Ophthalmology Consult and follow-ups.', 'Podiatry Consult and follow-ups.', 'Psychology Consult and follow-ups.', 'Psychiatry Consult and follow-ups.', 'Pulmonary Consult and follow-ups.', 'Inpatient Physiatrist Consult and follow-ups.', '', '']},
+      {'name': 'Cranbury Center', 'address': 'Monroe Township', 'capabilities': ['Dental Consult and follow-ups.', '', '', 'GI Consult and follow-ups.', 'Infectious Disease Consult and follow-ups.', 'Ophthalmology Consult and follow-ups.', 'Podiatry Consult and follow-ups.', 'Psychology Consult and follow-ups.', 'Psychiatry Consult and follow-ups.', '', '', '', 'Sepsis']},
+      {'name': 'Complete care at green Knoll', 'address': '875 Route 202/206 North Bridgewater NJ 08807', 'capabilities': ['Dental Consult and follow-ups.', 'Dermatology Consult and follow-ups.', 'ENT Consult and follow-ups.', 'GI Consult and follow-ups.', 'Infectious Disease Consult and follow-ups.', 'Ophthalmology Consult and follow-ups.', 'Podiatry Consult and follow-ups.', 'Psychology Consult and follow-ups.', 'Psychiatry Consult and follow-ups.', 'Pulmonary Consult and follow-ups.', 'Inpatient Physiatrist Consult and follow-ups.', '', 'We provide Great Care!!']},
+      {'name': 'Complete Care at Cedar Grove', 'address': '536 Ridge Road Cedar Grove NJ 07009', 'capabilities': ['Dental Consult and follow-ups.', '', 'ENT Consult and follow-ups.', 'GI Consult and follow-ups.', 'Infectious Disease Consult and follow-ups.', '', 'Podiatry Consult and follow-ups.', '', 'Psychiatry Consult and follow-ups.', 'Pulmonary Consult and follow-ups.', 'Inpatient Physiatrist Consult and follow-ups.', '', '']},
+      {'name': 'Elmora Hills Healthcare and Rehabilitation Center', 'address': 'Elizabeth NJ', 'capabilities': ['Dental Consult and follow-ups.', 'Dermatology Consult and follow-ups.', '', 'GI Consult and follow-ups.', 'Infectious Disease Consult and follow-ups.', 'Ophthalmology Consult and follow-ups.', 'Podiatry Consult and follow-ups.', 'Psychology Consult and follow-ups.', 'Psychiatry Consult and follow-ups.', '', 'Inpatient Physiatrist Consult and follow-ups.', '', '']},
+      {'name': 'Care One at the Highlands', 'address': 'Edison, NJ', 'capabilities': ['Dental Consult and follow-ups.', 'Dermatology Consult and follow-ups.', 'ENT Consult and follow-ups.', 'GI Consult and follow-ups.', 'Infectious Disease Consult and follow-ups.', 'Ophthalmology Consult and follow-ups.', 'Podiatry Consult and follow-ups.', 'Psychology Consult and follow-ups.', 'Psychiatry Consult and follow-ups.', 'Pulmonary Consult and follow-ups.', 'Inpatient Physiatrist Consult and follow-ups.', '', 'Life vest']},
+      {'name': 'Runnells Center', 'address': '40 Watchung Way Berkeley Heights, NJ 07922', 'capabilities': ['Dental Consult and follow-ups.', '', '', '', 'Infectious Disease Consult and follow-ups.', 'Ophthalmology Consult and follow-ups.', 'Podiatry Consult and follow-ups.', 'Psychology Consult and follow-ups.', 'Psychiatry Consult and follow-ups.', '', '', '', '']},
+      {'name': 'Jewish Home ', 'address': 'Freehold, NJ ', 'capabilities': ['Dental Consult and follow-ups.', 'Dermatology Consult and follow-ups.', '', '', 'Infectious Disease Consult and follow-ups.', 'Ophthalmology Consult and follow-ups.', 'Podiatry Consult and follow-ups.', 'Psychology Consult and follow-ups.', 'Psychiatry Consult and follow-ups.', 'Pulmonary Consult and follow-ups.', 'Inpatient Physiatrist Consult and follow-ups.', '', '']},
+      {'name': 'Coral Harbor ', 'address': 'Neptune, NJ ', 'capabilities': ['Dental Consult and follow-ups.', 'Dermatology Consult and follow-ups.', '', '', 'Infectious Disease Consult and follow-ups.', 'Ophthalmology Consult and follow-ups.', 'Podiatry Consult and follow-ups.', 'Psychology Consult and follow-ups.', 'Psychiatry Consult and follow-ups.', 'Pulmonary Consult and follow-ups.', 'Inpatient Physiatrist Consult and follow-ups.', '', '']},
+      {'name': 'Crest Pointe ', 'address': 'Point Pleasant NJ ', 'capabilities': ['Dental Consult and follow-ups.', 'Dermatology Consult and follow-ups.', '', '', 'Infectious Disease Consult and follow-ups.', 'Ophthalmology Consult and follow-ups.', 'Podiatry Consult and follow-ups.', 'Psychology Consult and follow-ups.', 'Psychiatry Consult and follow-ups.', 'Pulmonary Consult and follow-ups.', 'Inpatient Physiatrist Consult and follow-ups.', '', '']},
+    ]
+
+    var options = ["Dental Consult and follow-ups.", "Dermatology Consult and follow-ups.", "ENT Consult and follow-ups."  ]
+
+    function fillTable(){
+      let checkedOptions = [...document.querySelectorAll('input:checked')].map(e=>e.id);
+      let matchingFacilities = facilities.filter(f => hasAllCapabilities(checkedOptions, f.capabilities))
+      document.getElementById("tableBody").innerHTML = facilitiesToTableRows(matchingFacilities);
+    }
+
+    function hasAllCapabilities(requiredCapabilities, facilityCapabilities){
+      let requiredSet = new Set([...requiredCapabilities]);
+      let facilitySet = new Set([...facilityCapabilities]);
+      let intersection = [...requiredSet].filter(x => facilitySet.has(x));
+      if (intersection.length == requiredSet.size){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }
+
+    function fillOptions(){
+      document.getElementById("options").innerHTML = optionsToCheckboxes(options)
+    }
+
+    function facilityToTableRow(facility){
+      return `<tr><td>${facility.name}</td><td>${facility.address}</td></tr>`
+    }
+
+    function facilitiesToTableRows(facilities){
+      tableRows = ""
+      for (const facility of facilities) {
+        tableRows += facilityToTableRow(facility);
+      }
+      return tableRows;
+    }
+
+    function optionToCheckBox(option){
+      return `<div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" value="" id="${option}" onClick="fillTable()"> <label class="form-check-label" for="${option}">${option}</label></div>`
+    }
+
+    function optionsToCheckboxes(options){
+      option_html = ""
+      for (const option of options) {
+        option_html += optionToCheckBox(option);
+      }
+      return option_html;
+    }
+
+    addEventListener("load", (event) => {
+      fillOptions();
+      fillTable();
+    });
+
+
+    
+    
+  </script>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container">
@@ -17,14 +88,23 @@
     </nav>
 
     <div class="container my-5">
-      <h1>Hello, world!</h1>
-      <div class="col-lg-8 px-0">
-        <p class="fs-5">You've successfully loaded up the Bootstrap starter example. It includes <a href="https://getbootstrap.com/">Bootstrap 5</a> via the <a href="https://www.jsdelivr.com/package/npm/bootstrap">jsDelivr CDN</a> and includes an additional CSS and JS file for your own code.</p>
-        <p>Feel free to download or copy-and-paste any parts of this example.</p>
-
-        <hr class="col-1 my-4">
-
-
+      <div class="row">
+        <div class="col">
+          <h3>Capabilities</h3>
+          <div id="options"></div>
+        </div>
+        <div class="col">
+          <h3>Matching Facilities</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Address</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
       </div>
     </div>
 
